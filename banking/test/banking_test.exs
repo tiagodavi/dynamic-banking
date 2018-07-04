@@ -106,4 +106,21 @@ defmodule BankingTest do
     assert {:error, "There is no balance enough"} = Banking.transfer(source, destination, 1500.0)
   end
 
+  test ".report returns all transactions" do
+    assert {:ok, email} = Banking.open("tiago.asp.net@gmail.com")
+    assert {:ok, _amount} = Banking.cash_out(email, 399.00)
+    assert {:ok, _amount} = Banking.cash_out(email, 125.00)
+    assert {:ok, _amount} = Banking.cash_out(email, 78.00)
+
+    response = Banking.report({:_, :_, :_})
+    |> Enum.count()
+
+    assert response == 3
+  end
+
+  test ".report returns empty list when there are no transactions" do
+    response = Banking.report({:_, :_, :_})
+    assert response == []
+  end
+
 end

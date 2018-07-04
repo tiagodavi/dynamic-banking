@@ -12,6 +12,16 @@ defmodule Banking.Application do
       {DynamicSupervisor, name: Banking.Account.Supervisor, strategy: :one_for_one}
     ]
 
+    ets_opts = [
+      :named_table,
+      :duplicate_bag,
+      :public,
+      read_concurrency: true,
+      write_concurrency: true
+    ]
+
+    :ets.new(:transactions, ets_opts)
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Banking.Supervisor]

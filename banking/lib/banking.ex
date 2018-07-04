@@ -33,6 +33,7 @@ defmodule Banking do
       {:ok, balance} = Server.balance(email)
       if(balance >= amount) do
         Server.cash_out(email, amount)
+        build_transaction(amount)
         IO.inspect "An email has been sent here..."
         {:ok, amount}
       else
@@ -56,6 +57,7 @@ defmodule Banking do
         if(source_balance >= amount) do
           Server.cash_out(source_email, amount)
           Server.cash_in(destination_email, amount)
+          build_transaction(amount)
           IO.inspect "An email has been sent here..."
           {:ok, amount}
         else
@@ -74,6 +76,15 @@ defmodule Banking do
     else
       {:error, "Account not found"}
     end
+  end
+
+  def report({year, month, day}) do
+    :ets.match_object(:transactions, {{year, month, day}, :_})
+  end
+
+  defp build_transaction(amount) do
+    date = Date.utc_today()
+    :ets.insert(:transactions, {{date.year, date.month, date.day}, amount})
   end
 
 end

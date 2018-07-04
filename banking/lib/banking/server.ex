@@ -57,6 +57,7 @@ defmodule Banking.Server do
   end
 
   def clean() do
+    :ets.delete_all_objects(:transactions)
     children()
     |> Enum.map(fn({_, pid, :worker, _}) ->
        DynamicSupervisor.terminate_child(Banking.Account.Supervisor, pid)
