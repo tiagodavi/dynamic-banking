@@ -12,11 +12,11 @@ defmodule Banking do
     Server.clean()
   end
 
-  def open(email, password) do
+  def open(email) do
     if is_open?(email) do
       {:error, "Account already exists"}
     else
-      Server.new(email, password)
+      Server.new(email)
     end
   end
 
@@ -30,8 +30,8 @@ defmodule Banking do
   def cash_out(email, amount)
   when valid_amount(amount) do
     if is_open?(email) do
-      {:ok, balance} = Server.balance(email)
-      if(balance >= amount) do
+      {:ok, account} = Server.info(email)
+      if(account.balance >= amount) do
         Server.cash_out(email, amount)
         build_transaction(amount)
         IO.inspect "An email has been sent here..."
@@ -53,8 +53,8 @@ defmodule Banking do
 
       is_open?(source_email) &&
       is_open?(destination_email) ->
-        {:ok, source_balance} = Server.balance(source_email)
-        if(source_balance >= amount) do
+        {:ok, source_account} = Server.info(source_email)
+        if(source_account.balance >= amount) do
           Server.cash_out(source_email, amount)
           Server.cash_in(destination_email, amount)
           build_transaction(amount)
@@ -70,9 +70,9 @@ defmodule Banking do
   end
   def transfer(_,_,_), do: {:error, "Invalid Amount"}
 
-  def balance(email) do
+  def info(email) do
     if is_open?(email) do
-      Server.balance(email)
+      Server.info(email)
     else
       {:error, "Account not found"}
     end

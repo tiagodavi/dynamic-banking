@@ -1,10 +1,9 @@
 defmodule Banking.Account do
-  defstruct [email: "", password: "", balance: 1000.00]
+  defstruct [email: "", balance: 1000.00]
 
-  def new({email, password}) do
+  def new(email) do
     %Banking.Account{
-      email: email,
-      password: Comeonin.Bcrypt.hashpwsalt(password)
+      email: email
     }
   end
 end
