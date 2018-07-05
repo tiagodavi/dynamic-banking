@@ -10,9 +10,13 @@ I tried to keep this project really simple and just show some GenServers, ETS Ta
   * Use back office as Admin of all accounts
   * Use Docker
   * Use correct HTTP methods for errors such as: 401, 403 and so on
+  * Create tests for Phoenix (I created all tests in business logic)
 
 ### To start your Phoenix server:
 
+    * Enter to the banking folder `cd banking`
+    * Install dependencies with `mix deps.get`
+    * Run all business tests `mix test`
     * Enter to the api folder `cd api`
     * Install dependencies with `mix deps.get`
     * Start Phoenix endpoint with `mix phx.server`
