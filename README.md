@@ -9,6 +9,7 @@ I tried to keep this project really simple and just show some GenServers, ETS Ta
   * Not allow an account to access data of other accounts
   * Use back office as Admin of all accounts
   * Use Docker
+  * Use correct HTTP methods for errors such as: 401, 403 and so on
 
 ### To start your Phoenix server:
 
