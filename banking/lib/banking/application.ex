@@ -14,7 +14,7 @@ defmodule Banking.Application do
 
     ets_opts = [
       :named_table,
-      :duplicate_bag,
+      :set,
       :public,
       read_concurrency: true,
       write_concurrency: true

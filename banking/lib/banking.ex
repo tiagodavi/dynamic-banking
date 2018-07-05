@@ -78,13 +78,20 @@ defmodule Banking do
     end
   end
 
-  def report({year, month, day}) do
-    :ets.match_object(:transactions, {{year, month, day}, :_})
+  def report() do
+    :ets.match_object(:transactions, {:_, :_})
+    |> Enum.map(&(%{ date: elem(&1, 0), amount: elem(&1, 1) }))
   end
 
   defp build_transaction(amount) do
     date = Date.utc_today()
-    :ets.insert(:transactions, {{date.year, date.month, date.day}, amount})
+    key  = Date.to_string(date)
+    case :ets.lookup(:transactions, key) do
+      [{ date, total }] ->
+        :ets.insert(:transactions, {key, total + amount})
+      [] ->
+        :ets.insert(:transactions, {key, amount})
+    end
   end
 
 end
