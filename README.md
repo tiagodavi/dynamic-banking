@@ -6,8 +6,8 @@ I tried to keep this project really simple and just show some GenServers, ETS Ta
   * Use Ecto / PostgreSQL / Ecto Transactions (Multi)
   * Use Ecto or Params to validate user inputs
   * Use individual security for each account
-  * Not allow an account access data of other accounts
-  * Use backoffice as Admin of all accounts
+  * Not allow an account to access data of other accounts
+  * Use back office as Admin of all accounts
   * Use Docker
 
 ### To start your Phoenix server:
