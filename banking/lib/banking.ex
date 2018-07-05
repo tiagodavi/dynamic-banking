@@ -12,11 +12,11 @@ defmodule Banking do
     Server.clean()
   end
 
-  def open(email) do
+  def open(email, password) do
     if is_open?(email) do
       {:error, "Account already exists"}
     else
-      Server.new(email)
+      Server.new(email, password)
     end
   end
 

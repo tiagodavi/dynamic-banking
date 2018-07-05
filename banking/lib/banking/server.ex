@@ -3,17 +3,16 @@ defmodule Banking.Server do
 
   alias Banking.{Account, Server}
 
-  def start_link(email) do
-    name = via_tuple(email)
-    GenServer.start_link(__MODULE__, email, name: name)
+  def start_link({email, _password} = attrs) do
+    GenServer.start_link(__MODULE__, attrs, name: via_tuple(email))
   end
 
   def via_tuple(email) do
     {:via, Registry, {Banking.Account.Registry, email}}
   end
 
-  def init(email) do
-    {:ok, Account.new(email)}
+  def init(attrs) do
+    {:ok, Account.new(attrs)}
   end
 
   def handle_call({ :info }, _from, account) do
@@ -31,8 +30,8 @@ defmodule Banking.Server do
     {:noreply, state}
   end
 
-  def new(email) do
-    DynamicSupervisor.start_child(Banking.Account.Supervisor, {Server, email})
+  def new(email, password) do
+    DynamicSupervisor.start_child(Banking.Account.Supervisor, {Server, {email, password}})
     {:ok, email}
   end
 

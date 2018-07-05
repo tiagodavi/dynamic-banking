@@ -1,0 +1,5 @@
+%{
+  "bcrypt_elixir": {:hex, :bcrypt_elixir, "1.0.7", "e79d84b666bfad0e461ed217860e1c7de6bc4a1ae919cdb39d473ca784817653", [:make, :mix], [{:elixir_make, "~> 0.4", [hex: :elixir_make, repo: "hexpm", optional: false]}], "hexpm"},
+  "comeonin": {:hex, :comeonin, "4.1.1", "c7304fc29b45b897b34142a91122bc72757bc0c295e9e824999d5179ffc08416", [:mix], [{:argon2_elixir, "~> 1.2", [hex: :argon2_elixir, repo: "hexpm", optional: true]}, {:bcrypt_elixir, "~> 0.12.1 or ~> 1.0", [hex: :bcrypt_elixir, repo: "hexpm", optional: true]}, {:pbkdf2_elixir, "~> 0.12", [hex: :pbkdf2_elixir, repo: "hexpm", optional: true]}], "hexpm"},
+  "elixir_make": {:hex, :elixir_make, "0.4.2", "332c649d08c18bc1ecc73b1befc68c647136de4f340b548844efc796405743bf", [:mix], [], "hexpm"},
+}

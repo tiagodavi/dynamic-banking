@@ -1,14 +1,17 @@
 defmodule BankingTest do
   use ExUnit.Case, async: true
 
+  @default_email "tiago.asp.net@gmail.com"
+  @default_password "123"
+
   setup do
     Banking.clean()
     :ok
   end
 
   test ".all returns a list of accounts when there are accounts" do
-    Banking.open("tiago.asp.net1@gmail.com")
-    Banking.open("tiago.asp.net2@gmail.com")
+    Banking.open("tiago.asp.net1@gmail.com", @default_password)
+    Banking.open("tiago.asp.net2@gmail.com", @default_password)
 
     response = Banking.all()
     |> Enum.count()
@@ -22,17 +25,17 @@ defmodule BankingTest do
   end
 
   test ".open returns email when account has just been opened" do
-    assert {:ok, email} = Banking.open("tiago.asp.net@gmail.com")
+    assert {:ok, email} = Banking.open(@default_email, @default_password)
     assert email == "tiago.asp.net@gmail.com"
   end
 
   test ".open returns error when account already exists" do
-    assert {:ok, email} = Banking.open("tiago.asp.net@gmail.com")
-    assert {:error, "Account already exists"} = Banking.open(email)
+    assert {:ok, email} = Banking.open(@default_email, @default_password)
+    assert {:error, "Account already exists"} = Banking.open(email, @default_password)
   end
 
   test ".is_open? returns true when account is opened" do
-    {:ok, email} = Banking.open("tiago.asp.net@gmail.com")
+    {:ok, email} = Banking.open(@default_email, @default_password)
     assert Banking.is_open?(email) == true
   end
 
@@ -44,7 +47,7 @@ defmodule BankingTest do
   end
 
   test ".balance returns balance of R$1.000,00 when account has just been opened" do
-    {:ok, email} = Banking.open("tiago.asp.net@gmail.com")
+    {:ok, email} = Banking.open(@default_email, @default_password)
     {:ok, balance} = Banking.balance(email)
     assert balance == 1000.00
   end
@@ -54,14 +57,14 @@ defmodule BankingTest do
   end
 
   test ".cash_out decreases balance when is able to get cash" do
-    assert {:ok, email} = Banking.open("tiago.asp.net@gmail.com")
+    assert {:ok, email} = Banking.open(@default_email, @default_password)
     assert {:ok, _amount} = Banking.cash_out(email, 399.00)
     assert {:ok, balance} = Banking.balance(email)
     assert balance == 601.0
   end
 
   test ".cash_out returns error when amount is invalid" do
-    assert {:ok, email} = Banking.open("tiago.asp.net@gmail.com")
+    assert {:ok, email} = Banking.open(@default_email, @default_password)
     assert {:error, "Invalid Amount"} = Banking.cash_out(email, 500)
   end
 
@@ -70,13 +73,13 @@ defmodule BankingTest do
   end
 
   test ".cash_out returns error when there is no balance enough" do
-    assert {:ok, email} = Banking.open("tiago.asp.net@gmail.com")
+    assert {:ok, email} = Banking.open(@default_email, @default_password)
     assert {:error, "There is no balance enough"} = Banking.cash_out(email, 1001.00)
   end
 
   test ".transfer decreases/increases balance when is able to transfer" do
-    assert {:ok, source} = Banking.open("tiago.asp.net1@gmail.com")
-    assert {:ok, destination} = Banking.open("tiago.asp.net2@gmail.com")
+    assert {:ok, source} = Banking.open("tiago.asp.net1@gmail.com", @default_password)
+    assert {:ok, destination} = Banking.open("tiago.asp.net2@gmail.com", @default_password)
     assert {:ok, _amount} = Banking.transfer(source, destination, 250.0)
     assert {:ok, source_balance} = Banking.balance(source)
     assert {:ok, destination_balance} = Banking.balance(destination)
@@ -85,29 +88,29 @@ defmodule BankingTest do
   end
 
   test ".transfer returns error when amount is invalid" do
-    assert {:ok, source} = Banking.open("tiago.asp.net1@gmail.com")
-    assert {:ok, destination} = Banking.open("tiago.asp.net2@gmail.com")
+    assert {:ok, source} = Banking.open("tiago.asp.net1@gmail.com", @default_password)
+    assert {:ok, destination} = Banking.open("tiago.asp.net2@gmail.com", @default_password)
     assert {:error, "Invalid Amount"} = Banking.transfer(source, destination, 250)
   end
 
   test ".transfer returns error when source and destination are the same" do
-    assert {:ok, source} = Banking.open("tiago.asp.net@gmail.com")
+    assert {:ok, source} = Banking.open(@default_email, @default_password)
     assert {:error, "Source and Destination are the same"} = Banking.transfer(source, source, 250.0)
   end
 
-  test ".transfer returns error when one of accounts don't exist" do
-    assert {:ok, source} = Banking.open("tiago.asp.net@gmail.com")
+  test ".transfer returns error when either source or destination doesn't exist" do
+    assert {:ok, source} = Banking.open(@default_email, @default_password)
     assert {:error, "Account (source or destination) not found"} = Banking.transfer(source, "", 250.0)
   end
 
   test ".transfer returns error when there is no balance enough" do
-    assert {:ok, source} = Banking.open("tiago.asp.net1@gmail.com")
-    assert {:ok, destination} = Banking.open("tiago.asp.net2@gmail.com")
+    assert {:ok, source} = Banking.open("tiago.asp.net1@gmail.com", @default_password)
+    assert {:ok, destination} = Banking.open("tiago.asp.net2@gmail.com", @default_password)
     assert {:error, "There is no balance enough"} = Banking.transfer(source, destination, 1500.0)
   end
 
   test ".report returns total of all transactions" do
-    assert {:ok, email} = Banking.open("tiago.asp.net@gmail.com")
+    assert {:ok, email} = Banking.open("tiago.asp.net@gmail.com", @default_password)
     assert {:ok, _amount} = Banking.cash_out(email, 399.00)
     assert {:ok, _amount} = Banking.cash_out(email, 125.00)
     assert {:ok, _amount} = Banking.cash_out(email, 78.00)
